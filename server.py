@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import http.server
 import socketserver
+import socket
 import os
 from functools import partial
 
@@ -15,11 +16,16 @@ class CustomHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Expires', '0')
         super().end_headers()
 
+class ReuseTCPServer(socketserver.TCPServer):
+    def server_bind(self):
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.bind(self.server_address)
+
 if __name__ == "__main__":
     PORT = 5000
     HOST = "0.0.0.0"  # Allow all hosts for Replit proxy
     
-    with socketserver.TCPServer((HOST, PORT), CustomHTTPRequestHandler) as httpd:
+    with ReuseTCPServer((HOST, PORT), CustomHTTPRequestHandler) as httpd:
         print(f"Server running at http://{HOST}:{PORT}/")
         print("Serving files from current directory")
         httpd.serve_forever()
