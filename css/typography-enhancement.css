@@ -1,0 +1,80 @@
+/* Typography Enhancement - Bigger fonts for specific sections */
+
+/* Target the "AI & Robots = Freedom, Not Fear" section */
+.utility-padding-all-2rem h3 + p {
+    font-size: 1.25rem !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0.01em !important;
+}
+
+/* Enhanced readability for main content paragraphs */
+.utility-padding-all-2rem p {
+    font-size: 1.15rem !important;
+    line-height: 1.65 !important;
+    margin-bottom: 1.2rem !important;
+}
+
+/* Specific targeting for "Back to Our Roots" section */
+h3:contains("Back to Our Roots") + p,
+h3[text*="Back to Our Roots"] + p {
+    font-size: 1.3rem !important;
+    line-height: 1.7 !important;
+    font-weight: 400 !important;
+}
+
+/* Alternative approach - target by content keywords */
+p:has-text("The world is shifting"),
+p:has-text("For the first time since agriculture") {
+    font-size: 1.3rem !important;
+    line-height: 1.7 !important;
+}
+
+/* General enhancement for grid layout text content */
+.w-layout-grid .utility-padding-all-2rem {
+    padding: 3rem !important;
+}
+
+.w-layout-grid .utility-padding-all-2rem p {
+    font-size: 1.2rem !important;
+    line-height: 1.7 !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.w-layout-grid .utility-padding-all-2rem h3 {
+    font-size: 1.75rem !important;
+    margin-bottom: 1.5rem !important;
+    line-height: 1.4 !important;
+}
+
+/* Reduce excessive white space */
+.utility-padding-all-2rem br + br {
+    display: none !important;
+}
+
+/* Better spacing for emphasized text */
+.utility-padding-all-2rem strong {
+    font-weight: 600 !important;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .utility-padding-all-2rem p {
+        font-size: 1.1rem !important;
+        line-height: 1.6 !important;
+    }
+    
+    .utility-padding-all-2rem {
+        padding: 2rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .utility-padding-all-2rem p {
+        font-size: 1.05rem !important;
+        line-height: 1.55 !important;
+    }
+    
+    .utility-padding-all-2rem {
+        padding: 1.5rem !important;
+    }
+}
