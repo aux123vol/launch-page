@@ -13,7 +13,9 @@ class MediaOptimizer {
     
     this.imageObserver = null;
     this.videoObserver = null;
+    this.mutationObserver = null;
     this.currentlyPlayingVideo = null;
+    this.processedVideos = new WeakSet();
     
     this.init();
   }
@@ -33,10 +35,14 @@ class MediaOptimizer {
       this.setupImageObserver();
       this.setupVideoObserver();
       this.setupBackgroundImageObserver();
+      this.setupMutationObserver();
     } else {
       // Fallback for older browsers - load everything
       this.loadAllMedia();
     }
+    
+    // Prepare all existing videos for lazy loading
+    this.prepareAllVideosForLazyLoading();
     
     // Optimize existing media
     this.optimizeExistingMedia();
@@ -70,7 +76,7 @@ class MediaOptimizer {
     
     // Observe all videos
     const videos = document.querySelectorAll('video');
-    videos.forEach(video => this.videoObserver.observe(video));
+    videos.forEach(video => this.observeVideo(video));
   }
   
   setupBackgroundImageObserver() {
@@ -86,6 +92,88 @@ class MediaOptimizer {
     // Observe elements with background images
     const bgElements = document.querySelectorAll('[data-bg]');
     bgElements.forEach(el => bgImageObserver.observe(el));
+  }
+  
+  setupMutationObserver() {
+    // Watch for dynamically added videos (common with Webflow)
+    if ('MutationObserver' in window) {
+      this.mutationObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              // Check if the added node is a video
+              if (node.tagName === 'VIDEO') {
+                this.prepareVideoForLazyLoading(node);
+                this.observeVideo(node);
+              }
+              
+              // Check for videos within the added node
+              const videos = node.querySelectorAll ? node.querySelectorAll('video') : [];
+              videos.forEach(video => {
+                this.prepareVideoForLazyLoading(video);
+                this.observeVideo(video);
+              });
+            }
+          });
+        });
+      });
+      
+      this.mutationObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    }
+  }
+  
+  observeVideo(video) {
+    // Only observe if not already processed
+    if (!this.processedVideos.has(video) && this.videoObserver) {
+      this.processedVideos.add(video);
+      this.videoObserver.observe(video);
+    }
+  }
+  
+  prepareAllVideosForLazyLoading() {
+    const videos = document.querySelectorAll('video');
+    videos.forEach(video => this.prepareVideoForLazyLoading(video));
+  }
+  
+  prepareVideoForLazyLoading(video) {
+    // Skip if already processed
+    if (video.dataset.lazyPrepared === 'true') {
+      return;
+    }
+    
+    // Handle videos that already have src attributes
+    const sources = video.querySelectorAll('source');
+    sources.forEach(source => {
+      if (source.src && !source.dataset.src) {
+        // Move src to data-src for lazy loading
+        source.dataset.src = source.src;
+        source.removeAttribute('src');
+        console.log('Prepared source for lazy loading:', source.dataset.src);
+      }
+    });
+    
+    // Handle video element src
+    if (video.src && !video.dataset.src) {
+      video.dataset.src = video.src;
+      video.removeAttribute('src');
+      console.log('Prepared video for lazy loading:', video.dataset.src);
+    }
+    
+    // Ensure preload is set to none
+    video.preload = 'none';
+    
+    // Mark as prepared
+    video.dataset.lazyPrepared = 'true';
+    
+    // Add placeholder if video has poster
+    if (!video.style.backgroundImage && video.poster) {
+      video.style.backgroundImage = `url(${video.poster})`;
+      video.style.backgroundSize = 'cover';
+      video.style.backgroundPosition = 'center';
+    }
   }
   
   loadImage(img) {
@@ -107,20 +195,33 @@ class MediaOptimizer {
   }
   
   loadVideo(video) {
+    // Skip if already loaded
+    if (video.dataset.lazyLoaded === 'true') {
+      return;
+    }
+    
+    let hasVideoToLoad = false;
+    
+    // Load video sources with data-src
+    const sources = video.querySelectorAll('source[data-src]');
+    sources.forEach(source => {
+      source.src = source.dataset.src;
+      source.removeAttribute('data-src');
+      hasVideoToLoad = true;
+    });
+    
+    // Load video with data-src
     if (video.dataset.src && !video.src) {
-      // Load video sources
-      const sources = video.querySelectorAll('source[data-src]');
-      sources.forEach(source => {
-        source.src = source.dataset.src;
-        source.removeAttribute('data-src');
-      });
-      
-      if (video.dataset.src) {
-        video.src = video.dataset.src;
-        video.removeAttribute('data-src');
-      }
-      
+      video.src = video.dataset.src;
+      video.removeAttribute('data-src');
+      hasVideoToLoad = true;
+    }
+    
+    // If we loaded any video sources, reload the video
+    if (hasVideoToLoad) {
       video.load();
+      video.dataset.lazyLoaded = 'true';
+      console.log('Lazy loaded video:', video);
     }
   }
   
@@ -162,6 +263,19 @@ class MediaOptimizer {
         this.currentlyPlayingVideo = video;
       });
     });
+  }
+  
+  // Cleanup method
+  destroy() {
+    if (this.imageObserver) {
+      this.imageObserver.disconnect();
+    }
+    if (this.videoObserver) {
+      this.videoObserver.disconnect();
+    }
+    if (this.mutationObserver) {
+      this.mutationObserver.disconnect();
+    }
   }
   
   loadAllMedia() {
