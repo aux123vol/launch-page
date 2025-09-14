@@ -1,0 +1,35 @@
+/* Full-width layout fix for Genre AI 2.0 website */
+/* This overrides container width limits to eliminate white space on sides */
+
+.w-container {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+.container {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+.container.small-container,
+.container.large-container {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* Ensure nav spans full width */
+.nav-container {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* Body and html full width */
+html, body {
+  width: 100% !important;
+  overflow-x: hidden;
+}
+
+/* Ensure no horizontal scrolling */
+* {
+  box-sizing: border-box;
+}
