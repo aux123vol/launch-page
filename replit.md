@@ -28,13 +28,6 @@ This is a static HTML website originally created with Webflow. It appears to be 
 - **Framework**: Webflow-generated HTML/CSS
 
 ## Recent Changes
-- **2025-09-14**: Performance and Typography Optimization
-  - Fixed image loading lag issues (92MB optimization with lazy loading)
-  - Implemented smart caching headers (images: 1 week, videos: 1 day, CSS/JS: 1 hour)
-  - Added typography enhancements with larger, more readable fonts for key sections
-  - Created lazy loading system with progressive image loading effects
-  - Enhanced readability for "The World is Shifting" and "Back to Our Roots" text sections
-  - Reduced excessive white space and improved text spacing
 - **2025-09-13**: Initial Replit setup completed
   - Created Python server script with cache control headers
   - Configured workflow for static file serving
