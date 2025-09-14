@@ -10,22 +10,10 @@ class CustomHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, directory=os.getcwd(), **kwargs)
     
     def end_headers(self):
-        # Different caching strategies for different file types
-        if self.path.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg')):
-            # Aggressive caching for images (1 week)
-            self.send_header('Cache-Control', 'public, max-age=604800, immutable')
-            self.send_header('Expires', 'Thu, 31 Dec 2024 23:59:59 GMT')
-        elif self.path.endswith(('.mp4', '.webm', '.mov')):
-            # Moderate caching for videos (1 day)
-            self.send_header('Cache-Control', 'public, max-age=86400')
-        elif self.path.endswith(('.css', '.js')):
-            # Moderate caching for CSS/JS (1 hour)
-            self.send_header('Cache-Control', 'public, max-age=3600')
-        else:
-            # No cache for HTML files during development
-            self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
-            self.send_header('Pragma', 'no-cache')
-            self.send_header('Expires', '0')
+        # Add cache control headers to prevent caching issues in Replit
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
         super().end_headers()
 
 class ReuseTCPServer(socketserver.TCPServer):
