@@ -33,3 +33,35 @@ html, body {
 * {
   box-sizing: border-box;
 }
+
+/* Performance optimizations */
+.w-background-video,
+.background-video,
+.background-video-3 {
+  content-visibility: auto;
+  contain-intrinsic-size: 400px 300px;
+}
+
+/* Heavy image sections optimization */
+.section-image-wrapper-2,
+.utility-aspect-3x2-2 {
+  content-visibility: auto;
+  contain-intrinsic-size: 300px 200px;
+}
+
+/* Smooth loading transitions */
+img[loading="lazy"] {
+  filter: blur(2px);
+  transition: filter 0.3s ease;
+}
+
+img[loading="lazy"].loaded,
+img.loaded {
+  filter: none;
+}
+
+/* Video loading optimization */
+video[preload="none"] {
+  background-size: cover;
+  background-position: center;
+}
