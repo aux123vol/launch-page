@@ -1,49 +1,62 @@
-/* Typography Enhancement - Bigger fonts for specific sections */
+/* Typography Enhancement - MUCH Bigger fonts for specific sections */
 
-/* Target the "AI & Robots = Freedom, Not Fear" section */
-.utility-padding-all-2rem h3 + p {
-    font-size: 1.25rem !important;
-    line-height: 1.6 !important;
-    letter-spacing: 0.01em !important;
+/* Back to Our Roots section - LARGE fonts */
+.section-roots {
+    max-width: 68ch;
+    margin-inline: auto;
 }
 
-/* Enhanced readability for main content paragraphs */
-.utility-padding-all-2rem p {
-    font-size: 1.15rem !important;
+.section-roots h2, 
+.section-roots h3 {
+    font-size: clamp(2.0rem, 1.2vw + 1.6rem, 2.75rem) !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.005em !important;
+    margin-bottom: 0.75em !important;
+}
+
+.section-roots p {
+    font-size: clamp(1.25rem, 1vw + 1rem, 1.6rem) !important;
     line-height: 1.65 !important;
-    margin-bottom: 1.2rem !important;
+    margin-bottom: 1.25em !important;
 }
 
-/* Specific targeting for "Back to Our Roots" section */
-h3:contains("Back to Our Roots") + p,
-h3[text*="Back to Our Roots"] + p {
-    font-size: 1.3rem !important;
-    line-height: 1.7 !important;
-    font-weight: 400 !important;
+/* The world is shifting section - LARGE fonts */
+.section-shifting {
+    max-width: 68ch;
+    margin-inline: auto;
 }
 
-/* Alternative approach - target by content keywords */
-p:has-text("The world is shifting"),
-p:has-text("For the first time since agriculture") {
-    font-size: 1.3rem !important;
-    line-height: 1.7 !important;
+.section-shifting h2, 
+.section-shifting h3 {
+    font-size: clamp(2.0rem, 1.2vw + 1.6rem, 2.5rem) !important;
+    line-height: 1.25 !important;
+    margin-bottom: 0.75em !important;
 }
 
-/* General enhancement for grid layout text content */
-.w-layout-grid .utility-padding-all-2rem {
-    padding: 3rem !important;
+.section-shifting p {
+    font-size: clamp(1.3rem, 0.9vw + 1rem, 1.55rem) !important;
+    line-height: 1.65 !important;
+    letter-spacing: 0.005em !important;
+    margin-bottom: 1.2em !important;
 }
 
+/* Enhanced spacing for these special sections */
+.section-roots.utility-padding-all-2rem, 
+.section-shifting.utility-padding-all-2rem {
+    padding: clamp(1.5rem, 3vw, 3.5rem) !important;
+}
+
+/* Fallback for general grid layout text - also larger */
 .w-layout-grid .utility-padding-all-2rem p {
-    font-size: 1.2rem !important;
+    font-size: 1.35rem !important;
     line-height: 1.7 !important;
     margin-bottom: 1.5rem !important;
 }
 
 .w-layout-grid .utility-padding-all-2rem h3 {
-    font-size: 1.75rem !important;
+    font-size: 2.1rem !important;
     margin-bottom: 1.5rem !important;
-    line-height: 1.4 !important;
+    line-height: 1.3 !important;
 }
 
 /* Reduce excessive white space */
