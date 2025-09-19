@@ -1,0 +1,50 @@
+/* Full-width layout fix - removes white space on sides */
+
+/* Override Webflow container width constraints */
+.w-container {
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Override layout block container constraints */
+.w-layout-blockcontainer {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* Override container classes */
+.container {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+.container.large-container,
+.container.small-container {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* Ensure full width for body and html */
+html, body {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Navigation container full width */
+.nav-container {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* Ensure sections extend full width */
+.section {
+  width: 100% !important;
+}
+
+/* Remove any horizontal margins that might cause scrollbars */
+* {
+  box-sizing: border-box;
+}
