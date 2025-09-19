@@ -62,3 +62,11 @@ html, body {
 .faq-section .rich-text-3 p {
   color: #666 !important;
 }
+
+/* Center the image in the "Lend a Hand, Shape the Dream" section */
+.image-6 {
+  display: block !important;
+  margin: 0 auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
