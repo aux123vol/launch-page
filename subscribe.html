@@ -150,21 +150,8 @@
       }
     }
 
-    // Check if user is authenticated
-    fetch('/api/auth/user')
-      .then(response => {
-        if (!response.ok) {
-          // Redirect to login or show login message
-          showMessage('Please log in to subscribe');
-          return;
-        }
-        // User is authenticated, initialize payment
-        initialize();
-      })
-      .catch(error => {
-        console.error('Auth check error:', error);
-        showMessage('Please log in to subscribe');
-      });
+    // Initialize payment form directly (no login required)
+    initialize();
 
     document.getElementById('payment-form').addEventListener('submit', handleSubmit);
   </script>
