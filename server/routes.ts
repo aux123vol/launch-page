@@ -42,12 +42,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.isAuthenticated() ? (req.user as any)?.claims?.sub : null;
 
       // Create mission signup
-      const signup = await storage.createMissionSignup({
-        email,
-        userId,
-        isNewsletterSubscribed: true,
-        signupSource: "website"
-      });
+      let signup;
+      try {
+        signup = await storage.createMissionSignup({
+          email,
+          userId,
+          isNewsletterSubscribed: true,
+          signupSource: "website"
+        });
+      } catch (error: any) {
+        if (error.message === 'EMAIL_ALREADY_EXISTS') {
+          return res.status(409).json({ 
+            message: "Email already signed up",
+            signupCount: await storage.getMissionSignupCount()
+          });
+        }
+        throw error;
+      }
 
       // Get updated count
       const signupCount = await storage.getMissionSignupCount();

@@ -46,11 +46,19 @@ export class DatabaseStorage implements IStorage {
 
   // Mission signup operations
   async createMissionSignup(signupData: InsertMissionSignup): Promise<MissionSignup> {
-    const [signup] = await db
-      .insert(missionSignups)
-      .values(signupData)
-      .returning();
-    return signup;
+    try {
+      const [signup] = await db
+        .insert(missionSignups)
+        .values(signupData)
+        .returning();
+      return signup;
+    } catch (error: any) {
+      // Handle unique constraint violation
+      if (error?.code === '23505' && error?.constraint?.includes('email')) {
+        throw new Error('EMAIL_ALREADY_EXISTS');
+      }
+      throw error;
+    }
   }
 
   async getMissionSignupByEmail(email: string): Promise<MissionSignup | undefined> {

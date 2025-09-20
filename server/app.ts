@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import { registerRoutes } from "./routes";
 
 const app = express();
@@ -20,17 +21,26 @@ app.use('/api', (req, res, next) => {
   }
 });
 
-// Serve static files (keep the current Python server for now)
-app.use(express.static('.'));
+// Block access to sensitive files/directories first
+app.use(['/server', '/shared', '/node_modules', '*.config.*', 'package*.json', '.env*'], (req, res) => {
+  res.status(403).send('Forbidden');
+});
+
+// Serve static files (website only)
+app.use(express.static('.', {
+  index: ['index.html'],
+  dotfiles: 'deny' // Block hidden files
+}));
 
 async function startServer() {
   try {
     const server = await registerRoutes(app);
-    const PORT = process.env.PORT || 3001; // Use 3001 to not conflict with Python server
+    const PORT = process.env.PORT || 5000; // Use port 5000 for both website and API
     
-    server.listen(PORT, () => {
-      console.log(`Backend API server running on port ${PORT}`);
-      console.log(`Visit http://localhost:${PORT} for the API`);
+    server.listen(PORT, '0.0.0.0', () => {
+      console.log(`Genre server running on port ${PORT}`);
+      console.log(`Website: http://0.0.0.0:${PORT}`);
+      console.log(`API: http://0.0.0.0:${PORT}/api/*`);
     });
   } catch (error) {
     console.error("Failed to start server:", error);

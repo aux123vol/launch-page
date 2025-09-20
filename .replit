@@ -1,4 +1,4 @@
-modules = ["web", "python-3.11", "nodejs-20"]
+modules = ["web", "python-3.11", "nodejs-20", "postgresql-16"]
 [agent]
 expertMode = true
 integrations = ["github:1.0.0", "javascript_log_in_with_replit:1.0.0", "javascript_database:1.0.0", "javascript_sendgrid:1.0.0"]
@@ -16,15 +16,15 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Static Website Server"
+args = "Genre Server"
 
 [[workflows.workflow]]
-name = "Static Website Server"
+name = "Genre Server"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python3 server.py"
+args = "npm run dev"
 waitForPort = 5000
 
 [workflows.workflow.metadata]
@@ -35,16 +35,12 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 34383
+localPort = 33865
 externalPort = 3001
 
 [[ports]]
 localPort = 38405
 externalPort = 3000
-
-[[ports]]
-localPort = 45097
-externalPort = 3002
 
 [deployment]
 deploymentTarget = "autoscale"
