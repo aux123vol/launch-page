@@ -394,7 +394,7 @@
                 </li>
               </ul>
               <div class="w-layout-hflex button-group utility-margin-bottom-2rem">
-                <a href="#" class="button-10 w-inline-block">
+                <a href="#" id="subscribe-monthly-btn" class="button-10 w-inline-block">
                   <div><strong>Subscribe for $15/mo</strong></div>
                 </a>
               </div>
@@ -432,7 +432,7 @@
                   <p>Dedicated account manager, Priority Custom support and Priority Branding<br>‍</p>
                 </li>
               </ul>
-              <a href="#" class="button-10 w-inline-block">
+              <a href="#" id="lifetime-access-btn" class="button-10 w-inline-block">
                 <div><strong>Claim Lifetime Access – $150</strong></div>
               </a>
             </div>
@@ -1288,6 +1288,28 @@
     </section>
   </section>
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=683c99246a18bf73ad21aa4e" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script>
+    // Handle early bird pricing button clicks
+    document.addEventListener('DOMContentLoaded', function() {
+      // Monthly subscription button
+      const monthlyBtn = document.getElementById('subscribe-monthly-btn');
+      if (monthlyBtn) {
+        monthlyBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = '/subscribe.html';
+        });
+      }
+
+      // Lifetime access button
+      const lifetimeBtn = document.getElementById('lifetime-access-btn');
+      if (lifetimeBtn) {
+        lifetimeBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = '/checkout.html';
+        });
+      }
+    });
+  </script>
   <script src="js/webflow.js" type="text/javascript"></script>
   <script src="js/mission-signup.js?v=2" type="text/javascript"></script>
 </body>

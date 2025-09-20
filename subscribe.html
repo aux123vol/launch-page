@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html data-wf-page="67519b2d5b66e5cd652bab78" data-wf-site="6734e88a7b52ad21aa4c8993" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Subscribe - Genre AI</title>
+  <meta content="Subscribe to Genre AI Early Bird pricing" name="description">
+  <meta content="Subscribe - Genre AI" property="og:title">
+  <meta content="Subscribe to Genre AI Early Bird pricing" property="og:description">
+  <meta content="Subscribe - Genre AI" property="twitter:title">
+  <meta content="Subscribe to Genre AI Early Bird pricing" property="twitter:description">
+  <meta property="og:type" content="website">
+  <meta content="summary_large_image" name="twitter:card">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link href="css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="css/webflow.css" rel="stylesheet" type="text/css">
+  <link href="css/genre-eef6ea-082c3e3be16d-0b8c1853d60bc.webflow.css" rel="stylesheet" type="text/css">
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <main class="main-wrapper">
+      <div class="section-2">
+        <div class="container-2 w-container">
+          <div class="utility-text-align-center utility-margin-bottom-4">
+            <h1 class="h1-heading">Subscribe to Early Bird - $15/mo</h1>
+            <p class="paragraph">Lock in your rate for life — as long as your subscription stays active.</p>
+          </div>
+          
+          <div class="w-form">
+            <div id="payment-form-container" style="max-width: 500px; margin: 0 auto;">
+              <div id="loading" style="text-align: center; padding: 2rem;">
+                <div style="display: inline-block; width: 2rem; height: 2rem; border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                <p>Setting up payment...</p>
+              </div>
+              
+              <form id="payment-form" style="display: none;">
+                <div id="payment-element">
+                  <!-- Stripe Elements will create form elements here -->
+                </div>
+                <button id="submit-button" type="submit" class="button primary-button w-button" style="margin-top: 1rem; width: 100%;">
+                  Subscribe for $15/mo
+                </button>
+              </form>
+              
+              <div id="payment-messages" style="margin-top: 1rem;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+
+  <script>
+    // Initialize Stripe
+    const stripe = Stripe(window.ENV?.VITE_STRIPE_PUBLIC_KEY || 'pk_test_51S9LmKJy30lcJmQHNjetwwn1QpopZFl0SULlj0io0HgTC4mbGWKFi4vFbsIQ0od71975nhjvp0t2GyC6B5kvgaj3008m9Nzi2V');
+    
+    let elements;
+    let clientSecret;
+
+    async function initialize() {
+      try {
+        // Create subscription on the backend
+        const response = await fetch('/api/get-or-create-subscription', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ priceId: 'price_monthly_15' }) // We'll need to set this up
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || 'Failed to create subscription');
+        }
+
+        const { clientSecret: secret } = await response.json();
+        clientSecret = secret;
+
+        if (!clientSecret) {
+          throw new Error('No client secret received');
+        }
+
+        // Initialize Stripe Elements
+        const appearance = {
+          theme: 'stripe',
+        };
+        elements = stripe.elements({ appearance, clientSecret });
+
+        const paymentElementOptions = {
+          layout: "tabs",
+        };
+
+        const paymentElement = elements.create("payment", paymentElementOptions);
+        paymentElement.mount("#payment-element");
+
+        // Show the form and hide loading
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('payment-form').style.display = 'block';
+
+      } catch (error) {
+        console.error('Initialization error:', error);
+        showMessage('Error setting up payment: ' + error.message);
+        document.getElementById('loading').style.display = 'none';
+      }
+    }
+
+    async function handleSubmit(e) {
+      e.preventDefault();
+      setLoading(true);
+
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: window.location.origin + '/subscribe-success.html',
+        },
+      });
+
+      if (error) {
+        if (error.type === "card_error" || error.type === "validation_error") {
+          showMessage(error.message);
+        } else {
+          showMessage("An unexpected error occurred.");
+        }
+      }
+
+      setLoading(false);
+    }
+
+    function showMessage(messageText) {
+      const messageContainer = document.querySelector("#payment-messages");
+      messageContainer.textContent = messageText;
+      messageContainer.style.color = messageText.includes('Error') ? 'red' : 'green';
+    }
+
+    function setLoading(isLoading) {
+      const submitButton = document.querySelector("#submit-button");
+      if (isLoading) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Processing...";
+      } else {
+        submitButton.disabled = false;
+        submitButton.textContent = "Subscribe for $15/mo";
+      }
+    }
+
+    // Check if user is authenticated
+    fetch('/api/auth/user')
+      .then(response => {
+        if (!response.ok) {
+          // Redirect to login or show login message
+          showMessage('Please log in to subscribe');
+          return;
+        }
+        // User is authenticated, initialize payment
+        initialize();
+      })
+      .catch(error => {
+        console.error('Auth check error:', error);
+        showMessage('Please log in to subscribe');
+      });
+
+    document.getElementById('payment-form').addEventListener('submit', handleSubmit);
+  </script>
+</body>
+</html>

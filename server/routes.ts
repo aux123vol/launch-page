@@ -10,7 +10,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
 }
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-08-27.basil",
+  apiVersion: "2023-10-16",
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -128,14 +128,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Stripe payment routes
-  // Route for one-time payments
+  // Route for one-time payments - FIXED: Server-controlled pricing
   app.post("/api/create-payment-intent", async (req: Request, res: Response) => {
     try {
-      const { amount } = req.body;
+      const { type } = req.body;
+      
+      // Server-controlled pricing - prevent client tampering
+      let amount: number;
+      let description: string;
+      
+      if (type === 'lifetime') {
+        amount = 15000; // $150.00 in cents
+        description = 'Genre AI Lifetime Access';
+      } else {
+        return res.status(400).json({ message: "Invalid payment type" });
+      }
+
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(amount * 100), // Convert to cents
+        amount,
         currency: "usd",
+        description,
+        metadata: {
+          type: type,
+          product: 'genre_ai_lifetime'
+        },
       });
+      
       res.json({ clientSecret: paymentIntent.client_secret });
     } catch (error: any) {
       res
@@ -179,25 +197,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     try {
-      const customer = await stripe.customers.create({
-        email: user.email,
-        name: user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : undefined,
-      });
+      let customerId = user.stripeCustomerId;
+      
+      // Reuse existing customer or create new one
+      if (!customerId) {
+        const customer = await stripe.customers.create({
+          email: user.email,
+          name: user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : undefined,
+        });
+        customerId = customer.id;
+        await storage.updateStripeCustomerId(userId, customerId);
+      }
 
-      await storage.updateStripeCustomerId(userId, customer.id);
-
+      // Create a subscription with monthly pricing ($15/month)
+      // For now, we'll create a subscription with the amount directly
+      // In production, you should use actual Stripe Price IDs
       const subscription = await stripe.subscriptions.create({
-        customer: customer.id,
+        customer: customerId,
         items: [{
-          // Note: You'll need to set STRIPE_PRICE_ID in your environment
-          // Get it from https://dashboard.stripe.com/products (starts with `price_`)
-          price: process.env.STRIPE_PRICE_ID || 'price_1XXXXXXXXXXXXXXXXXXXXXX', // Replace with actual price ID
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Genre AI Early Bird Subscription',
+              description: 'Monthly access to Genre AI platform',
+            },
+            unit_amount: 1500, // $15.00 in cents
+            recurring: {
+              interval: 'month',
+            },
+          },
         }],
         payment_behavior: 'default_incomplete',
         expand: ['latest_invoice.payment_intent'],
       });
 
-      await storage.updateUserStripeInfo(userId, customer.id, subscription.id);
+      await storage.updateUserStripeInfo(userId, customerId, subscription.id);
   
       res.send({
         subscriptionId: subscription.id,
