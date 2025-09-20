@@ -1,7 +1,7 @@
-modules = ["web", "python-3.11"]
+modules = ["web", "python-3.11", "nodejs-20"]
 [agent]
 expertMode = true
-integrations = ["github:1.0.0"]
+integrations = ["github:1.0.0", "javascript_log_in_with_replit:1.0.0", "javascript_database:1.0.0", "javascript_sendgrid:1.0.0"]
 
 [nix]
 channel = "stable-25_05"
@@ -43,7 +43,7 @@ localPort = 38405
 externalPort = 3000
 
 [[ports]]
-localPort = 44909
+localPort = 45097
 externalPort = 3002
 
 [deployment]
