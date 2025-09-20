@@ -2725,7 +2725,7 @@
 .card-link.card-link-on-accent-primary {
   color: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1746390675681---text-color--text-primary);
   -webkit-text-stroke-color: black;
-  background-color: #fff;
+  background: transparent;
   border-color: #000000e6;
 }
 
@@ -5058,7 +5058,7 @@ img {
 
 .section-7 {
   color: #1c1c1c;
-  background-color: #fff;
+  background: transparent;
   margin-top: 0;
   padding-top: 2rem;
   padding-bottom: 0;
@@ -5179,7 +5179,7 @@ img {
 
 .section-10 {
   color: #1c1c1c;
-  background-color: #fff;
+  background: transparent;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
@@ -5346,13 +5346,13 @@ img {
 
 .section-6 {
   color: #1c1c1c;
-  background-color: #fff;
+  background: transparent;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
 
 .section-6.secondary-section {
-  background-color: #fff;
+  background: transparent;
   padding-top: 0;
   padding-bottom: 0;
   padding-left: 0;
@@ -6119,13 +6119,13 @@ img {
 
 .section-11 {
   color: #1c1c1c;
-  background-color: #fff;
+  background: transparent;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
 
 .section-11.secondary-section {
-  background-color: #fff;
+  background: transparent;
   padding-top: 0;
   padding-bottom: 0;
   padding-left: 0;
@@ -6303,13 +6303,13 @@ img {
 
 .section-12 {
   color: #1c1c1c;
-  background-color: #fff;
+  background: transparent;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
 
 .section-12.secondary-section {
-  background-color: #fff;
+  background: transparent;
   padding-top: 0;
   padding-bottom: 0;
   padding-left: 0;
@@ -7194,7 +7194,7 @@ img {
 
 .section-28 {
   color: #1c1c1c;
-  background-color: #fff;
+  background: transparent;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
@@ -7463,7 +7463,7 @@ img {
 
 .section-27 {
   color: #1c1c1c;
-  background-color: #fff;
+  background: transparent;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
@@ -7668,7 +7668,7 @@ img {
 
 .section-32 {
   color: #000;
-  background-color: #fff;
+  background: transparent;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
@@ -7788,7 +7788,7 @@ img {
 
 .section-19 {
   color: #fff;
-  background-color: #fff;
+  background: transparent;
   padding-top: 4rem;
   padding-bottom: 8rem;
 }
@@ -8054,7 +8054,7 @@ img {
 
 .section-31 {
   color: #000;
-  background-color: #fff;
+  background: transparent;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
@@ -8119,7 +8119,7 @@ img {
 
 .section {
   color: #1c1c1c;
-  background-color: #fff;
+  background: transparent;
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -8272,7 +8272,7 @@ img {
 
 .section-34 {
   color: #1c1c1c;
-  background-color: #fff;
+  background: transparent;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
@@ -8419,7 +8419,7 @@ img {
 
 .section-35 {
   color: #1c1c1c;
-  background-color: #fff;
+  background: transparent;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
@@ -8725,7 +8725,7 @@ img {
 }
 
 .section-40 {
-  background-color: #fff;
+  background: transparent;
 }
 
 .cover-image-15 {
@@ -8749,7 +8749,7 @@ img {
 
 .section-41 {
   color: #000;
-  background-color: #fff;
+  background: transparent;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
