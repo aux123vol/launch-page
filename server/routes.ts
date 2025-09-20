@@ -141,6 +141,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (type === 'lifetime') {
         amount = 15000; // $150.00 in cents
         description = 'Genre AI Lifetime Access';
+      } else if (type === 'subscription') {
+        amount = 1500; // $15.00 in cents
+        description = 'Genre AI Monthly Subscription';
       } else {
         return res.status(400).json({ message: "Invalid payment type" });
       }

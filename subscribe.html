@@ -66,18 +66,18 @@
 
     async function initialize() {
       try {
-        // Create subscription on the backend
-        const response = await fetch('/api/get-or-create-subscription', {
+        // Create payment intent for subscription
+        const response = await fetch('/api/create-payment-intent', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ priceId: 'price_monthly_15' }) // We'll need to set this up
+          body: JSON.stringify({ type: 'subscription' })
         });
 
         if (!response.ok) {
           const error = await response.json();
-          throw new Error(error.message || 'Failed to create subscription');
+          throw new Error(error.message || 'Failed to create payment intent');
         }
 
         const { clientSecret: secret } = await response.json();
