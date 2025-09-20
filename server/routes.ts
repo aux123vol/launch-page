@@ -5,12 +5,11 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 import { sendWelcomeEmail } from "./sendgrid";
 import Stripe from "stripe";
 
-// Initialize Stripe - TEMPORARY FIX: Swap keys since they're reversed in environment
-if (!process.env.VITE_STRIPE_PUBLIC_KEY) {
+// Initialize Stripe with proper secret key
+if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
 }
-// NOTE: Using VITE_STRIPE_PUBLIC_KEY because the keys are swapped in the environment
-const stripe = new Stripe(process.env.VITE_STRIPE_PUBLIC_KEY, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
 });
 
@@ -132,7 +131,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Route for one-time payments - FIXED: Server-controlled pricing
   app.post("/api/create-payment-intent", async (req: Request, res: Response) => {
     try {
-      const { type } = req.body;
+      const { type, amount: clientAmount } = req.body;
       
       // Server-controlled pricing - prevent client tampering
       let amount: number;
@@ -144,6 +143,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else if (type === 'subscription') {
         amount = 1500; // $15.00 in cents
         description = 'Genre AI Monthly Subscription';
+      } else if (type === 'donation') {
+        // For donations, allow client-specified amount but with validation
+        if (!clientAmount || clientAmount < 100 || clientAmount > 1000000) { // $1 to $10,000
+          return res.status(400).json({ message: "Invalid donation amount. Must be between $1 and $10,000" });
+        }
+        amount = Math.round(clientAmount); // Ensure it's an integer (cents)
+        description = `Genre AI Mission Support - $${(amount / 100).toFixed(2)}`;
       } else {
         return res.status(400).json({ message: "Invalid payment type" });
       }

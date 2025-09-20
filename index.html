@@ -356,6 +356,52 @@
         <ul role="list" class="grid-layout-5 mobile-portrait-1-column grid-gap-sm w-list-unstyled">
           <li class="card-6">
             <div class="card-body-3">
+              <p class="utility-margin-bottom-1rem">Support the mission and help fund Genre AI's development with any amount you choose</p>
+              <div class="divider-3 utility-margin-bottom-1rem"></div>
+              <h3 class="h2-heading-4 utility-margin-bottom-2">💝 Believe in the Mission<br><span style="font-size: 0.8em; opacity: 0.8;">Support Genre AI Development</span></h3>
+              <p><strong>Donate any amount - like Patreon</strong></p>
+              <p><strong>Help us build the future of storytelling</strong> — every contribution matters.<br></p>
+              <ul role="list" aria-label="Plan features" class="utility-margin-bottom-5 w-list-unstyled">
+                <li class="flex-horizontal-3 flex-gap-xxs">
+                  <div class="icon-extra-small-2 icon-container"><svg width="100%" height="100%" preserveaspectratio="xMidYMid meet" viewbox="0 0 24 24">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41z" fill="currentColor"></path>
+                    </svg></div>
+                  <p>Choose your own donation amount</p>
+                </li>
+                <li class="flex-horizontal-3 flex-gap-xxs">
+                  <div class="icon-extra-small-2 icon-container"><svg width="100%" height="100%" preserveaspectratio="xMidYMid meet" viewbox="0 0 24 24">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41z" fill="currentColor"></path>
+                    </svg></div>
+                  <p>Support independent creator platform development</p>
+                </li>
+                <li class="flex-horizontal-3 flex-gap-xxs">
+                  <div class="icon-extra-small-2 icon-container"><svg width="100%" height="100%" preserveaspectratio="xMidYMid meet" viewbox="0 0 24 24">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41z" fill="currentColor"></path>
+                    </svg></div>
+                  <p>Join the movement for fair creator compensation</p>
+                </li>
+                <li class="flex-horizontal-3 flex-gap-xxs">
+                  <div class="icon-extra-small-2 icon-container"><svg width="100%" height="100%" preserveaspectratio="xMidYMid meet" viewbox="0 0 24 24">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41z" fill="currentColor"></path>
+                    </svg></div>
+                  <p>Get updates on our progress and development</p>
+                </li>
+                <li class="flex-horizontal-3 flex-gap-xxs">
+                  <div class="icon-extra-small-2 icon-container"><svg width="100%" height="100%" preserveaspectratio="xMidYMid meet" viewbox="0 0 24 24">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41z" fill="currentColor"></path>
+                    </svg></div>
+                  <p>Make the struggling artist extinct 💪</p>
+                </li>
+              </ul>
+              <div class="w-layout-hflex button-group utility-margin-bottom-2rem">
+                <a href="/donate.html" id="donate-btn" class="button-10 w-inline-block">
+                  <div><strong>Support the Mission 💝</strong></div>
+                </a>
+              </div>
+            </div>
+          </li>
+          <li class="card-6">
+            <div class="card-body-3">
               <p class="utility-margin-bottom-1rem"> Perfect for early believers who want flexibility with ongoing access <span class="h4-heading-14"></span></p>
               <div class="divider-3 utility-margin-bottom-1rem"></div>
               <h3 class="h2-heading-4 utility-margin-bottom-2"> $15 /mo <span class="h4-heading-14"><strong>🐣</strong></span> - Bird Founder Rates  (Limited Time Only)<br></h3>
@@ -1306,6 +1352,15 @@
         lifetimeBtn.addEventListener('click', function(e) {
           e.preventDefault();
           window.location.href = '/checkout.html';
+        });
+      }
+
+      // Donation button
+      const donateBtn = document.getElementById('donate-btn');
+      if (donateBtn) {
+        donateBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = '/donate.html';
         });
       }
     });
