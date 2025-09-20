@@ -36,10 +36,10 @@ export async function sendWelcomeEmail(email: string, name: string, signupCount:
   return sendEmail({
     to: email,
     from: 'noreply@replit.app', // Using Replit domain - replace with your verified sender email
-    subject: 'Welcome to the Genre Mission! 🚀',
+    subject: 'Welcome to the Genre AI Mission! 🚀',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333; text-align: center;">Welcome to the Genre Mission!</h1>
+        <h1 style="color: #333; text-align: center;">Welcome to the Genre AI Mission!</h1>
         
         <p>Hi ${name},</p>
         <p>Thank you for joining our mission to revolutionize storytelling with AI!</p>
@@ -52,7 +52,7 @@ export async function sendWelcomeEmail(email: string, name: string, signupCount:
         <h3>What's Next?</h3>
         <ul>
           <li>🔔 We'll keep you updated on our progress</li>
-          <li>📖 Early access to Genre features as they launch</li>
+          <li>📖 Early access to Genre AI features as they launch</li>
           <li>💡 Exclusive tips and insights on AI storytelling</li>
           <li>🎯 First in line for special opportunities</li>
         </ul>
@@ -61,17 +61,17 @@ export async function sendWelcomeEmail(email: string, name: string, signupCount:
         
         <p style="margin-top: 30px;">
           Best regards,<br>
-          The Genre Team
+          The Genre AI Team
         </p>
         
         <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
         <p style="color: #666; font-size: 12px; text-align: center;">
-          You're receiving this because you signed up for updates from Genre. 
+          You're receiving this because you signed up for updates from Genre AI. 
           If you have any questions, reply to this email.
         </p>
       </div>
     `,
-    text: `Welcome to the Genre Mission!
+    text: `Welcome to the Genre AI Mission!
     
 Thank you for joining our mission to revolutionize storytelling with AI!
 
@@ -79,13 +79,13 @@ You're Creator #${signupCount}! You've joined an exclusive community of forward-
 
 What's Next?
 - We'll keep you updated on our progress
-- Early access to Genre features as they launch
+- Early access to Genre AI features as they launch
 - Exclusive tips and insights on AI storytelling
 - First in line for special opportunities
 
 Stay tuned for more exciting updates!
 
 Best regards,
-The Genre Team`
+The Genre AI Team`
   });
 }

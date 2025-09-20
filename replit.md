@@ -1,7 +1,7 @@
 # Genre AI 2.0 - Static Website
 
 ## Overview
-This is a static HTML website originally created with Webflow. It appears to be for a creative platform called "Genre" that focuses on storytelling and creative content. The website includes multiple pages showcasing features like creative suites, revenue streams, and reader engagement.
+This is a static HTML website originally created with Webflow. It appears to be for a creative platform called "Genre AI" that focuses on storytelling and creative content. The website includes multiple pages showcasing features like creative suites, revenue streams, and reader engagement.
 
 ## Project Structure
 - **Frontend**: Static HTML/CSS/JavaScript website
