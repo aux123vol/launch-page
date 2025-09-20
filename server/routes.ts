@@ -5,11 +5,12 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 import { sendWelcomeEmail } from "./sendgrid";
 import Stripe from "stripe";
 
-// Initialize Stripe
-if (!process.env.STRIPE_SECRET_KEY) {
+// Initialize Stripe - TEMPORARY FIX: Swap keys since they're reversed in environment
+if (!process.env.VITE_STRIPE_PUBLIC_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
 }
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+// NOTE: Using VITE_STRIPE_PUBLIC_KEY because the keys are swapped in the environment
+const stripe = new Stripe(process.env.VITE_STRIPE_PUBLIC_KEY, {
   apiVersion: "2023-10-16",
 });
 

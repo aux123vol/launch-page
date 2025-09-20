@@ -59,8 +59,8 @@
   </style>
 
   <script>
-    // Initialize Stripe
-    const stripe = Stripe(window.ENV?.VITE_STRIPE_PUBLIC_KEY || 'pk_test_51S9LmKJy30lcJmQHNjetwwn1QpopZFl0SULlj0io0HgTC4mbGWKFi4vFbsIQ0od71975nhjvp0t2GyC6B5kvgaj3008m9Nzi2V');
+    // Initialize Stripe - using hardcoded key since environment is swapped
+    const stripe = Stripe('pk_test_51S9LmKJy30lcJmQHNjetwwn1QpopZFl0SULlj0io0HgTC4mbGWKFi4vFbsIQ0od71975nhjvp0t2GyC6B5kvgaj3008m9Nzi2V');
     
     let elements;
     let clientSecret;
