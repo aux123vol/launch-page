@@ -1,15 +1,24 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { sendWelcomeEmail } from "./sendgrid";
+import Stripe from "stripe";
+
+// Initialize Stripe
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+}
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2025-08-27.basil",
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
   // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  app.get('/api/auth/user', isAuthenticated, async (req: Request, res: Response) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
@@ -21,7 +30,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Mission signup routes
-  app.post('/api/mission/signup', async (req, res) => {
+  app.post('/api/mission/signup', async (req: Request, res: Response) => {
     try {
       const { name, phone, email } = req.body;
       
@@ -97,7 +106,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get mission signup count (public endpoint)
-  app.get('/api/mission/count', async (req, res) => {
+  app.get('/api/mission/count', async (req: Request, res: Response) => {
     try {
       const count = await storage.getMissionSignupCount();
       res.json({ count });
@@ -108,13 +117,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Protected route: Get all mission signups (admin only)
-  app.get("/api/mission/signups", isAuthenticated, async (req, res) => {
+  app.get("/api/mission/signups", isAuthenticated, async (req: Request, res: Response) => {
     try {
       const signups = await storage.getAllMissionSignups();
       res.json(signups);
     } catch (error) {
       console.error("Error fetching signups:", error);
       res.status(500).json({ message: "Failed to fetch signups" });
+    }
+  });
+
+  // Stripe payment routes
+  // Route for one-time payments
+  app.post("/api/create-payment-intent", async (req: Request, res: Response) => {
+    try {
+      const { amount } = req.body;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100), // Convert to cents
+        currency: "usd",
+      });
+      res.json({ clientSecret: paymentIntent.client_secret });
+    } catch (error: any) {
+      res
+        .status(500)
+        .json({ message: "Error creating payment intent: " + error.message });
+    }
+  });
+
+  // Route for subscription payments
+  app.post('/api/get-or-create-subscription', async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.sendStatus(401);
+    }
+
+    let user = req.user as any;
+    const userId = user.claims.sub;
+
+    // Get user from database
+    user = await storage.getUser(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.stripeSubscriptionId) {
+      try {
+        const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
+        
+        res.send({
+          subscriptionId: subscription.id,
+          clientSecret: (subscription.latest_invoice as any)?.payment_intent?.client_secret,
+        });
+        return;
+      } catch (error) {
+        console.error("Error retrieving subscription:", error);
+        // Continue to create new subscription if retrieval fails
+      }
+    }
+    
+    if (!user.email) {
+      return res.status(400).json({ message: 'No user email on file' });
+    }
+
+    try {
+      const customer = await stripe.customers.create({
+        email: user.email,
+        name: user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : undefined,
+      });
+
+      await storage.updateStripeCustomerId(userId, customer.id);
+
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{
+          // Note: You'll need to set STRIPE_PRICE_ID in your environment
+          // Get it from https://dashboard.stripe.com/products (starts with `price_`)
+          price: process.env.STRIPE_PRICE_ID || 'price_1XXXXXXXXXXXXXXXXXXXXXX', // Replace with actual price ID
+        }],
+        payment_behavior: 'default_incomplete',
+        expand: ['latest_invoice.payment_intent'],
+      });
+
+      await storage.updateUserStripeInfo(userId, customer.id, subscription.id);
+  
+      res.send({
+        subscriptionId: subscription.id,
+        clientSecret: (subscription.latest_invoice as any)?.payment_intent?.client_secret,
+      });
+    } catch (error: any) {
+      console.error("Subscription creation error:", error);
+      return res.status(400).send({ error: { message: error.message } });
     }
   });
 
