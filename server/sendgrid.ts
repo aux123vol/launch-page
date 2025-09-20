@@ -35,7 +35,7 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
 export async function sendWelcomeEmail(email: string, name: string, signupCount: number): Promise<boolean> {
   return sendEmail({
     to: email,
-    from: 'noreply@genre.ai', // Replace with your verified sender email
+    from: 'noreply@replit.app', // Using Replit domain - replace with your verified sender email
     subject: 'Welcome to the Genre Mission! 🚀',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

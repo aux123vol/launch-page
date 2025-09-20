@@ -69,14 +69,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get updated count
       const signupCount = await storage.getMissionSignupCount();
 
-      // Send welcome email (disabled until SendGrid is configured)
-      // TODO: Enable once SendGrid API key is properly configured
-      // try {
-      //   await sendWelcomeEmail(email, name.trim(), signupCount);
-      // } catch (emailError) {
-      //   console.error("Failed to send welcome email:", emailError);
-      //   // Don't fail the signup if email fails
-      // }
+      // Send welcome email (temporarily disabled - see instructions above to enable)
+      // TODO: Fix SendGrid configuration first:
+      // 1. Verify API key has "Mail Send" permissions
+      // 2. Add verified sender email in SendGrid dashboard  
+      // 3. Update sender email in server/sendgrid.ts
+      // Uncomment below once fixed:
+      /*
+      try {
+        await sendWelcomeEmail(email, name.trim(), signupCount);
+        console.log(`Welcome email sent successfully to ${email}`);
+      } catch (emailError) {
+        console.error("Failed to send welcome email:", emailError);
+      }
+      */
 
       res.json({
         message: "Successfully joined the mission!",
