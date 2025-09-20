@@ -93,18 +93,20 @@ class MissionSignup {
   }
 
   async submitSignup(signupData, form = null) {
-    try {
-      // Show loading state
-      const submitBtn = form?.querySelector('input[type="submit"], button[type="submit"]');
-      const originalText = submitBtn?.value || submitBtn?.textContent || 'Join Mission';
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        if (submitBtn.tagName === 'INPUT') {
-          submitBtn.value = 'Joining...';
-        } else {
-          submitBtn.textContent = 'Joining...';
-        }
+    // Show loading state
+    const submitBtn = form?.querySelector('input[type="submit"], button[type="submit"]');
+    const originalText = submitBtn?.value || submitBtn?.textContent || 'Join Mission';
+    
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      if (submitBtn.tagName === 'INPUT') {
+        submitBtn.value = 'Joining...';
+      } else {
+        submitBtn.textContent = 'Joining...';
       }
+    }
+
+    try {
 
       // Ensure signupData is an object with required fields
       const requestData = typeof signupData === 'string' ? { email: signupData } : signupData;
