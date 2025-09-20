@@ -63,30 +63,40 @@ class MissionSignup {
     event.preventDefault();
     
     const formData = new FormData(form);
+    const name = formData.get('name-3') || formData.get('name') || formData.get('Name');
+    const phone = formData.get('name-2') || formData.get('phone') || formData.get('Phone');
     const email = formData.get('email-2') || formData.get('email') || formData.get('Email');
     
-    if (!email) {
+    if (!name || !name.trim()) {
+      this.showMessage('Please enter your name.', 'error');
+      return;
+    }
+    
+    if (!email || !email.includes('@')) {
       this.showMessage('Please enter a valid email address.', 'error');
       return;
     }
 
-    await this.submitSignup(email, form);
+    await this.submitSignup({ name: name.trim(), phone: phone?.trim(), email }, form);
   }
 
   handleJoinButtonClick(event) {
     event.preventDefault();
-    // Create a simple email prompt for standalone buttons
+    // Create prompts for name and email for standalone buttons
+    const name = prompt('Enter your name:');
+    if (!name || !name.trim()) return;
+    
     const email = prompt('Enter your email to join the mission:');
     if (email && email.includes('@')) {
-      this.submitSignup(email);
+      this.submitSignup({ name: name.trim(), email });
     }
   }
 
-  async submitSignup(email, form = null) {
+  async submitSignup(signupData, form = null) {
     try {
       // Show loading state
       const submitBtn = form?.querySelector('input[type="submit"], button[type="submit"]');
-      const originalText = submitBtn?.value || submitBtn?.textContent;
+      const originalText = submitBtn?.value || submitBtn?.textContent || 'Join Mission';
       if (submitBtn) {
         submitBtn.disabled = true;
         if (submitBtn.tagName === 'INPUT') {
@@ -96,12 +106,15 @@ class MissionSignup {
         }
       }
 
+      // Ensure signupData is an object with required fields
+      const requestData = typeof signupData === 'string' ? { email: signupData } : signupData;
+
       const response = await fetch(`${this.apiBaseUrl}/api/mission/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email })
+        body: JSON.stringify(requestData)
       });
 
       const data = await response.json();
@@ -141,9 +154,9 @@ class MissionSignup {
       if (submitBtn) {
         submitBtn.disabled = false;
         if (submitBtn.tagName === 'INPUT') {
-          submitBtn.value = originalText || 'Join Mission';
+          submitBtn.value = originalText;
         } else {
-          submitBtn.textContent = originalText || 'Join Mission';
+          submitBtn.textContent = originalText;
         }
       }
     }

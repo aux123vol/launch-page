@@ -32,7 +32,7 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
   }
 }
 
-export async function sendWelcomeEmail(email: string, signupCount: number): Promise<boolean> {
+export async function sendWelcomeEmail(email: string, name: string, signupCount: number): Promise<boolean> {
   return sendEmail({
     to: email,
     from: 'noreply@genre.ai', // Replace with your verified sender email
@@ -41,6 +41,7 @@ export async function sendWelcomeEmail(email: string, signupCount: number): Prom
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #333; text-align: center;">Welcome to the Genre Mission!</h1>
         
+        <p>Hi ${name},</p>
         <p>Thank you for joining our mission to revolutionize storytelling with AI!</p>
         
         <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">

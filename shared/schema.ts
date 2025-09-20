@@ -34,6 +34,8 @@ export const users = pgTable("users", {
 // Mission signups table to track who joined the mission
 export const missionSignups = pgTable("mission_signups", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: varchar("name").notNull(), // User's name
+  phone: varchar("phone"), // Phone number (optional)
   email: varchar("email").notNull().unique(), // Add unique constraint to prevent duplicates
   userId: varchar("user_id").references(() => users.id),
   isNewsletterSubscribed: boolean("is_newsletter_subscribed").default(true),

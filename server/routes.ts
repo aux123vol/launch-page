@@ -23,7 +23,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Mission signup routes
   app.post('/api/mission/signup', async (req, res) => {
     try {
-      const { email } = req.body;
+      const { name, phone, email } = req.body;
+      
+      if (!name || !name.trim()) {
+        return res.status(400).json({ message: "Name is required" });
+      }
       
       if (!email || !email.includes('@')) {
         return res.status(400).json({ message: "Valid email is required" });
@@ -45,6 +49,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let signup;
       try {
         signup = await storage.createMissionSignup({
+          name: name.trim(),
+          phone: phone?.trim() || null,
           email,
           userId,
           isNewsletterSubscribed: true,
@@ -65,7 +71,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Send welcome email
       try {
-        await sendWelcomeEmail(email, signupCount);
+        await sendWelcomeEmail(email, name.trim(), signupCount);
       } catch (emailError) {
         console.error("Failed to send welcome email:", emailError);
         // Don't fail the signup if email fails
