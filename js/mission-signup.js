@@ -153,10 +153,11 @@ class MissionSignup {
       const submitBtn = form?.querySelector('input[type="submit"], button[type="submit"]');
       if (submitBtn) {
         submitBtn.disabled = false;
+        const restoreText = originalText || 'Join Mission';
         if (submitBtn.tagName === 'INPUT') {
-          submitBtn.value = originalText;
+          submitBtn.value = restoreText;
         } else {
-          submitBtn.textContent = originalText;
+          submitBtn.textContent = restoreText;
         }
       }
     }
