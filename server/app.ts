@@ -22,8 +22,16 @@ app.use('/api', (req, res, next) => {
 });
 
 // Block access to sensitive files/directories first
-app.use(['/server', '/shared', '/node_modules', '*.config.*', 'package*.json', '.env*'], (req, res) => {
-  res.status(403).send('Forbidden');
+app.use((req, res, next) => {
+  const blockedPaths = ['/server', '/shared', '/node_modules'];
+  const blockedPatterns = [/\.config\./, /package.*\.json/, /\.env/];
+  
+  if (blockedPaths.some(path => req.path.startsWith(path)) || 
+      blockedPatterns.some(pattern => pattern.test(req.path))) {
+    res.status(403).send('Forbidden');
+  } else {
+    next();
+  }
 });
 
 // Serve static files (website only)
