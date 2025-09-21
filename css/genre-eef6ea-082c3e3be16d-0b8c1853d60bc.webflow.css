@@ -1671,7 +1671,7 @@
 }
 
 .nav {
-  z-index: 99;
+  z-index: 999;
   color: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1746390675681---text-color--text-primary);
   font-size: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1746390675681---base);
   background-color: #000;
@@ -1679,7 +1679,10 @@
   align-items: flex-start;
   width: 100%;
   display: flex;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 .nav.inverse-nav {
@@ -6443,6 +6446,7 @@ img {
 
 .body {
   background-color: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1746390675681---background-color--bg-secondary);
+  padding-top: 80px;
 }
 
 .paragraph-3 {
