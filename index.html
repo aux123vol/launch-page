@@ -286,9 +286,27 @@
                   <div style="font-size: 14px; opacity: 0.9;">Join the exclusive community shaping the future of storytelling!</div>
                 </div>
                 
-                <label for="name" class="field-label">Join the Mission Today - Get a chance to provide active feedback, receive updates from our newsletter and be part of &quot;Early Birds&quot; team !!!</label><label for="name-4" class="field-label">Name</label><input class="text-field w-input" maxlength="256" name="name-3" data-name="Name 3" placeholder="Enter your full name" type="text" id="name-3" pattern="[A-Za-z\s\-']+" title="Please enter a valid name (letters, spaces, hyphens, and apostrophes only)" required><label for="name-4" class="field-label">Phone</label><input class="text-field-2 w-input" maxlength="20" name="name-2" data-name="Name 2" placeholder="(123) 456-7890" type="tel" id="name-2" pattern="[\(\)\d\s\-\+\.]+" title="Please enter a valid phone number" required><label for="email" class="field-label-2">Email Address</label><input class="text-field-3 w-input" maxlength="256" name="email-2" data-name="Email 2" placeholder="your-email@example.com" type="email" id="email-2" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address" required>
-                <div class="w-form-formrecaptcha g-recaptcha g-recaptcha-error g-recaptcha-disabled g-recaptcha-invalid-key"></div>
-                <div class="text-block-5">By clicking &quot;Join Mission&quot; you are accepting our Privacy Policy.</div><input type="submit" data-wait="Please wait..." class="w-button" value="Join mission">
+                <label for="name" class="field-label">Join the Mission Today - Get a chance to provide active feedback, receive updates from our newsletter and be part of &quot;Early Birds&quot; team !!!</label>
+                
+                <label for="name-4" class="field-label">Name</label>
+                <input class="text-field w-input" maxlength="256" name="name-3" data-name="Name 3" placeholder="Enter your full name" type="text" id="name-3" required>
+                
+                <label for="name-4" class="field-label">Phone</label>
+                <input class="text-field-2 w-input" maxlength="20" name="name-2" data-name="Name 2" placeholder="(123) 456-7890" type="tel" id="name-2" required>
+                
+                <label for="email" class="field-label-2">Email Address</label>
+                <input class="text-field-3 w-input" maxlength="256" name="email-2" data-name="Email 2" placeholder="your-email@example.com" type="email" id="email-2" required>
+                
+                <!-- Math Captcha -->
+                <label class="field-label">Security Check</label>
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                  <p style="margin: 0 0 10px 0; font-weight: bold;">Please solve this math problem:</p>
+                  <p id="captcha-question" style="margin: 0 0 10px 0; font-size: 18px;"></p>
+                  <input type="number" id="captcha-answer" class="text-field w-input" placeholder="Your answer" required style="width: 100px;">
+                </div>
+                
+                <div class="text-block-5">By clicking &quot;Join Mission&quot; you are accepting our Privacy Policy.</div>
+                <input type="submit" data-wait="Please wait..." class="w-button" value="Join mission">
               </form>
               <div class="w-form-done">
                 <div>Thank you! Your submission has been received!</div>
@@ -299,44 +317,109 @@
             </div>
             
             <script>
-            // Enhanced form validation
-            document.getElementById('email-form').addEventListener('submit', function(e) {
-              const nameField = document.getElementById('name-3');
-              const phoneField = document.getElementById('name-2');
-              const emailField = document.getElementById('email-2');
+            // Generate math captcha
+            let correctAnswer = 0;
+            
+            function generateCaptcha() {
+              const num1 = Math.floor(Math.random() * 20) + 1;
+              const num2 = Math.floor(Math.random() * 20) + 1;
+              const operators = ['+', '-', '*'];
+              const operator = operators[Math.floor(Math.random() * operators.length)];
               
-              let isValid = true;
-              
-              // Name validation - only letters, spaces, hyphens, apostrophes
-              const namePattern = /^[A-Za-z\s\-']+$/;
-              if (!namePattern.test(nameField.value.trim()) || nameField.value.trim().length < 2) {
-                alert('Please enter a valid name (letters only, at least 2 characters)');
-                nameField.focus();
-                e.preventDefault();
-                return false;
+              let question = '';
+              switch(operator) {
+                case '+':
+                  correctAnswer = num1 + num2;
+                  question = `${num1} + ${num2} = ?`;
+                  break;
+                case '-':
+                  // Ensure positive result
+                  const larger = Math.max(num1, num2);
+                  const smaller = Math.min(num1, num2);
+                  correctAnswer = larger - smaller;
+                  question = `${larger} - ${smaller} = ?`;
+                  break;
+                case '*':
+                  // Use smaller numbers for multiplication
+                  const small1 = Math.floor(Math.random() * 10) + 1;
+                  const small2 = Math.floor(Math.random() * 10) + 1;
+                  correctAnswer = small1 * small2;
+                  question = `${small1} × ${small2} = ?`;
+                  break;
               }
               
-              // Phone validation - must contain numbers
-              const phonePattern = /[\(\)\d\s\-\+\.]+/;
-              const phoneNumbers = phoneField.value.replace(/[^\d]/g, '');
-              if (!phonePattern.test(phoneField.value.trim()) || phoneNumbers.length < 10) {
-                alert('Please enter a valid phone number (at least 10 digits)');
-                phoneField.focus();
-                e.preventDefault();
-                return false;
-              }
+              document.getElementById('captcha-question').textContent = question;
+            }
+            
+            // Enhanced form validation with captcha
+            document.addEventListener('DOMContentLoaded', function() {
+              generateCaptcha();
               
-              // Email validation - must be valid email format
-              const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-              if (!emailPattern.test(emailField.value.trim())) {
-                alert('Please enter a valid email address (example@domain.com)');
-                emailField.focus();
-                e.preventDefault();
-                return false;
-              }
-              
-              // If all validations pass
-              return true;
+              document.getElementById('email-form').addEventListener('submit', function(e) {
+                e.preventDefault(); // Always prevent default submission first
+                
+                const nameField = document.getElementById('name-3');
+                const phoneField = document.getElementById('name-2');
+                const emailField = document.getElementById('email-2');
+                const captchaField = document.getElementById('captcha-answer');
+                
+                // Clear previous error styling
+                [nameField, phoneField, emailField, captchaField].forEach(field => {
+                  field.style.borderColor = '';
+                });
+                
+                let hasError = false;
+                
+                // Name validation - only letters, spaces, hyphens, apostrophes, at least 2 chars
+                const namePattern = /^[A-Za-z\s\-']{2,}$/;
+                if (!namePattern.test(nameField.value.trim())) {
+                  alert('❌ Name must contain only letters, spaces, hyphens, or apostrophes (minimum 2 characters)');
+                  nameField.style.borderColor = 'red';
+                  nameField.focus();
+                  hasError = true;
+                  return;
+                }
+                
+                // Phone validation - must be a valid phone number
+                const phoneNumbers = phoneField.value.replace(/[^\d]/g, '');
+                if (phoneNumbers.length < 10 || phoneNumbers.length > 15) {
+                  alert('❌ Phone number must contain 10-15 digits');
+                  phoneField.style.borderColor = 'red';
+                  phoneField.focus();
+                  hasError = true;
+                  return;
+                }
+                
+                // Email validation - must be valid email format
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(emailField.value.trim())) {
+                  alert('❌ Please enter a valid email address (example@domain.com)');
+                  emailField.style.borderColor = 'red';
+                  emailField.focus();
+                  hasError = true;
+                  return;
+                }
+                
+                // Captcha validation
+                const userAnswer = parseInt(captchaField.value);
+                if (isNaN(userAnswer) || userAnswer !== correctAnswer) {
+                  alert('❌ Incorrect answer to the math problem. Please try again.');
+                  captchaField.style.borderColor = 'red';
+                  captchaField.focus();
+                  generateCaptcha(); // Generate new captcha
+                  captchaField.value = '';
+                  hasError = true;
+                  return;
+                }
+                
+                // If all validations pass
+                if (!hasError) {
+                  alert('✅ Thank you! Your information has been submitted successfully.');
+                  // Here you would normally send the data to your server
+                  document.querySelector('.w-form-done').style.display = 'block';
+                  document.getElementById('email-form').style.display = 'none';
+                }
+              });
             });
             </script>
           </div>
