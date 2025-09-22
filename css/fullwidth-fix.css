@@ -53,21 +53,11 @@ body {
   padding-top: 80px !important;
 }
 
-/* Make "What is Genre AI:" section have black background and white text */
-.section-12.secondary-section {
-  background-color: #000000 !important;
-  color: white !important;
-  padding: 40px 20px !important;
-}
-
+/* Ensure "What is Genre AI:" section has normal styling with black text */
 .section-12.secondary-section h2,
 .section-12.secondary-section p,
 .section-12.secondary-section strong {
-  color: white !important;
-}
-
-.section-12.secondary-section .container-9 {
-  background-color: transparent !important;
+  color: black !important;
 }
 
 /* Ensure sections extend full width */
