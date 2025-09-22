@@ -1,3 +1,9 @@
+// Cloudflare Turnstile tracking
+window.turnstileCompleted = false;
+window.onTurnstileSuccess = function(token) {
+  window.turnstileCompleted = true;
+};
+
 // Mission Signup Functionality
 class MissionSignup {
   constructor() {
@@ -74,6 +80,12 @@ class MissionSignup {
     
     if (!email || !email.includes('@')) {
       this.showMessage('Please enter a valid email address.', 'error');
+      return;
+    }
+
+    // Check Cloudflare Turnstile
+    if (!window.turnstileCompleted) {
+      this.showMessage('Please complete the security check.', 'error');
       return;
     }
 
