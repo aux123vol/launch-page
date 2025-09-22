@@ -24,25 +24,34 @@ class MissionSignup {
       if (response.ok) {
         const data = await response.json();
         this.signupCount = data.count || 0;
+      } else {
+        // Non-OK response, use fallback
+        this.signupCount = 47; // Fallback number to create some FOMO
       }
     } catch (error) {
-      console.error('Failed to load signup count:', error);
+      // Network error or other issue, use fallback silently
+      console.warn('Signup count unavailable, using fallback');
       this.signupCount = 47; // Fallback number to create some FOMO
     }
   }
 
   updateCountDisplay() {
-    // Update all elements with signup count
-    const countElements = document.querySelectorAll('[data-signup-count]');
-    countElements.forEach(el => {
-      el.textContent = this.signupCount;
-    });
+    try {
+      // Update all elements with signup count
+      const countElements = document.querySelectorAll('[data-signup-count]');
+      countElements.forEach(el => {
+        if (el) el.textContent = this.signupCount;
+      });
 
-    // Update FOMO messages
-    const fomoElements = document.querySelectorAll('[data-fomo-message]');
-    fomoElements.forEach(el => {
-      el.innerHTML = `🚀 <strong>${this.signupCount} creators</strong> have already joined the mission!`;
-    });
+      // Update FOMO messages
+      const fomoElements = document.querySelectorAll('[data-fomo-message]');
+      fomoElements.forEach(el => {
+        if (el) el.innerHTML = `🚀 <strong>${this.signupCount} creators</strong> have already joined the mission!`;
+      });
+    } catch (error) {
+      // Silently handle DOM access errors
+      console.warn('Unable to update count display');
+    }
   }
 
   setupEventListeners() {
