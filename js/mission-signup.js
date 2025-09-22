@@ -1,10 +1,7 @@
 // Cloudflare Turnstile tracking
 window.turnstileCompleted = false;
-
-// Global callback function for Turnstile
-window.turnstileCallback = function(token) {
+window.onTurnstileSuccess = function(token) {
   window.turnstileCompleted = true;
-  console.log('Turnstile completed successfully');
 };
 
 // Mission Signup Functionality

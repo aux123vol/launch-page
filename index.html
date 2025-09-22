@@ -17,7 +17,7 @@
   <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
   <link href="images/webclip.png" rel="apple-touch-icon">
   <!-- Cloudflare Turnstile -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer onload="console.log('Turnstile script loaded')" onerror="console.error('Failed to load Turnstile script')"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body class="body">
   <div class="nav">
@@ -302,8 +302,7 @@
                 <!-- Cloudflare Turnstile Captcha -->
                 <label class="field-label">Security Check</label>
                 <div style="margin: 15px 0;">
-                  <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-callback="turnstileCallback"></div>
-                  <p id="turnstile-feedback" style="font-size: 12px; color: #666; margin-top: 5px;">Please complete the security check above</p>
+                  <div class="cf-turnstile" data-sitekey="0x4AAAAAAABkMYinukE_XFyR" data-callback="onTurnstileSuccess"></div>
                 </div>
                 
                 <div class="text-block-5">By clicking &quot;Join Mission&quot; you are accepting our Privacy Policy.</div>
@@ -1380,35 +1379,7 @@
       }
     });
   </script>
-  <!-- <script src="js/webflow.js" type="text/javascript"></script> -->
-  <script>
-    // Simple Turnstile implementation
-    window.turnstileCompleted = false;
-    
-    function turnstileCallback(token) {
-      window.turnstileCompleted = true;
-      console.log('Cloudflare Turnstile completed');
-      // Show visual feedback
-      const feedback = document.getElementById('turnstile-feedback');
-      if (feedback) {
-        feedback.textContent = '✓ Security check completed';
-        feedback.style.color = 'green';
-      }
-    }
-    
-    // Simple form validation
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('email-form');
-      if (form) {
-        form.addEventListener('submit', function(e) {
-          if (!window.turnstileCompleted) {
-            e.preventDefault();
-            alert('Please complete the security check first.');
-            return false;
-          }
-        });
-      }
-    });
-  </script>
+  <script src="js/webflow.js" type="text/javascript"></script>
+  <script src="js/mission-signup.js?v=2" type="text/javascript"></script>
 </body>
 </html>
