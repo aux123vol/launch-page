@@ -76,6 +76,15 @@ body {
   opacity: 0.7 !important;
 }
 
+/* Make hero headings bigger */
+h1 strong {
+  font-size: 4.5rem !important;
+}
+
+.subheading strong {
+  font-size: 3rem !important;
+}
+
 /* Make the founding creator button blue */
 .button.secondary-button.secondary-button-on-inverse {
   background-color: #007BFF !important;
