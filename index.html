@@ -297,6 +297,48 @@
                 <div>Oops! Something went wrong while submitting the form.</div>
               </div>
             </div>
+            
+            <script>
+            // Enhanced form validation
+            document.getElementById('email-form').addEventListener('submit', function(e) {
+              const nameField = document.getElementById('name-3');
+              const phoneField = document.getElementById('name-2');
+              const emailField = document.getElementById('email-2');
+              
+              let isValid = true;
+              
+              // Name validation - only letters, spaces, hyphens, apostrophes
+              const namePattern = /^[A-Za-z\s\-']+$/;
+              if (!namePattern.test(nameField.value.trim()) || nameField.value.trim().length < 2) {
+                alert('Please enter a valid name (letters only, at least 2 characters)');
+                nameField.focus();
+                e.preventDefault();
+                return false;
+              }
+              
+              // Phone validation - must contain numbers
+              const phonePattern = /[\(\)\d\s\-\+\.]+/;
+              const phoneNumbers = phoneField.value.replace(/[^\d]/g, '');
+              if (!phonePattern.test(phoneField.value.trim()) || phoneNumbers.length < 10) {
+                alert('Please enter a valid phone number (at least 10 digits)');
+                phoneField.focus();
+                e.preventDefault();
+                return false;
+              }
+              
+              // Email validation - must be valid email format
+              const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+              if (!emailPattern.test(emailField.value.trim())) {
+                alert('Please enter a valid email address (example@domain.com)');
+                emailField.focus();
+                e.preventDefault();
+                return false;
+              }
+              
+              // If all validations pass
+              return true;
+            });
+            </script>
           </div>
         </div>
       </div>
