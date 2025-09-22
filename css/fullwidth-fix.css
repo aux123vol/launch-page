@@ -65,6 +65,17 @@ body {
   width: 100% !important;
 }
 
+/* Try Genre AI button hover effect - fade to dark gray since not ready */
+.button-3.primary-button-on-inverse {
+  transition: all 0.3s ease !important;
+}
+
+.button-3.primary-button-on-inverse:hover {
+  background-color: #555555 !important;
+  color: #cccccc !important;
+  opacity: 0.7 !important;
+}
+
 /* Remove any horizontal margins that might cause scrollbars */
 * {
   box-sizing: border-box;
