@@ -102,6 +102,12 @@ textarea.w-input {
   padding: 12px 16px !important;
 }
 
+/* Make Join mission button round */
+input[type="submit"][value="Join mission"] {
+  border-radius: 25px !important;
+  padding: 12px 30px !important;
+}
+
 /* Remove any horizontal margins that might cause scrollbars */
 * {
   box-sizing: border-box;
