@@ -1,8 +1,3 @@
-// Cloudflare Turnstile tracking
-window.turnstileCompleted = false;
-window.onTurnstileSuccess = function(token) {
-  window.turnstileCompleted = true;
-};
 
 // Mission Signup Functionality
 class MissionSignup {
@@ -19,20 +14,8 @@ class MissionSignup {
   }
 
   async loadSignupCount() {
-    try {
-      const response = await fetch(`${this.apiBaseUrl}/api/mission/count`);
-      if (response.ok) {
-        const data = await response.json();
-        this.signupCount = data.count || 0;
-      } else {
-        // Non-OK response, use fallback
-        this.signupCount = 47; // Fallback number to create some FOMO
-      }
-    } catch (error) {
-      // Network error or other issue, use fallback silently
-      console.warn('Signup count unavailable, using fallback');
-      this.signupCount = 47; // Fallback number to create some FOMO
-    }
+    // Use static count to avoid API calls that cause console errors
+    this.signupCount = 47; // Fallback number to create some FOMO
   }
 
   updateCountDisplay() {
@@ -92,9 +75,10 @@ class MissionSignup {
       return;
     }
 
-    // Check Cloudflare Turnstile
-    if (!window.turnstileCompleted) {
-      this.showMessage('Please complete the security check.', 'error');
+    // Check simple captcha checkbox
+    const humanCheck = document.getElementById('human-check');
+    if (!humanCheck || !humanCheck.checked) {
+      this.showMessage('Please confirm you are not a robot.', 'error');
       return;
     }
 
