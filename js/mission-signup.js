@@ -14,8 +14,17 @@ class MissionSignup {
   }
 
   async loadSignupCount() {
-    // Use static count to avoid API calls that cause console errors
-    this.signupCount = 47; // Fallback number to create some FOMO
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/api/mission/count`);
+      if (response.ok) {
+        const data = await response.json();
+        this.signupCount = data.count || 0;
+      } else {
+        this.signupCount = 0;
+      }
+    } catch (error) {
+      this.signupCount = 0;
+    }
   }
 
   updateCountDisplay() {
