@@ -110,7 +110,7 @@ input[type="submit"][value="Join mission"] {
 
 /* Tab styling for "What is Genre AI" section */
 .tab-menu-link-2.w-tab-link {
-  background-color: #808080 !important; /* Grey background for inactive tabs */
+  background-color: rgba(128, 128, 128, 0.2) !important; /* Faded transparent grey for inactive tabs */
   color: #000000 !important; /* Black text for inactive tabs */
   border-radius: 8px !important;
   margin: 0 5px !important;
